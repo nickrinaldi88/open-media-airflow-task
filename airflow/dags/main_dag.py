@@ -5,10 +5,11 @@ from airflow.utils.email import send_email
 import requests
 import smtplib, ssl
 
+# NYTimes API_Key
+
 the_key = "W3dEB3luQTF3eQkVjBzctrnJiTPAnwEm"
 
 # functions
-
 
 def fiction(**kwargs):
 
@@ -18,7 +19,6 @@ def fiction(**kwargs):
 	task_instance = kwargs['task_instance']
 	task_instance.xcom_push(key='fic_json_data', value=fic_json_data)
 	return fic_json_data
-
 
 def nonfiction(**kwargs):
 
@@ -70,8 +70,7 @@ def clean_data(task_instance, **kwargs):
 	
 	
 def send_emails(task_instance, **kwargs):
-
-	# task_instance = kwargs['task_instance']
+	
 	msg = task_instance.xcom_pull(key='msg')
 
 	port = 465
@@ -86,15 +85,12 @@ def send_emails(task_instance, **kwargs):
 		server.login(sender_email, password)
 		server.sendmail(sender_email, recipients, msg)
 
-
-
 default_args = {
 	'owner': 'admin',
 	'email': ['rinaldinick88@gmail.com'],
 	'retries': 2,
 }
 
-# utilize context manager
 with DAG('nytbook_dag1',
 		default_args=default_args,
 		description='A simple NYTimes Best Sellers DAG',
